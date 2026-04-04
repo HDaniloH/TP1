@@ -36,3 +36,4 @@ inline void Plano_de_Sprint::setObj(Texto texto){
 inline void Plano_de_Sprint::setCap(Tempo tempo){
     this->capacidade = tempo;
 }
+//opaopaopaopa

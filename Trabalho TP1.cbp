@@ -19,6 +19,7 @@
 				<Option compiler="gcc-mingw32" />
 			</Target>
 		</Build>
+		<Unit filename="Entidades.hpp" />
 		<Unit filename="dominios.cpp" />
 		<Unit filename="dominios.hpp" />
 		<Unit filename="main.cpp" />
