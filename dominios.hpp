@@ -1,44 +1,44 @@
 #ifndef DOMINIOS_HPP
 #define DOMINIOS_HPP
 #include <string>
-//Domínio-Codigo:
+//DomÃ­nio-Codigo:
 class Codigo{
 private:
     static const int LIMITE = 5;
-    bool validar(std::string);
-    std::string Code;
+    void validar(string);
+    string Code;
 public:
-    std::string getCode()const;
-    bool setCode(std::string);
+    string getCode()const;
+    void setCode(string);
 };
 //Metodos-Codigo:
-inline std::string Codigo::getCode()const{
+inline string Codigo::getCode()const{
     return Code;
 }
 
-//Domínio-Senha:
+//DomÃ­nio-Senha:
 class Senha{
 private:
     static const int LIMITE = 6;
-    std::string senha;
-    bool validar(std::string);
+    string senha;
+    void validar(string);
 public:
-    std::string getSenha()const;
-    bool setSenha(std::string);
+    string getSenha()const;
+    void setSenha(string);
 };
 //Metodos-Senha:
-inline std::string Senha::getSenha()const{
+inline string Senha::getSenha()const{
     return senha;
 }
 
-//Domínio-Tempo:
+//DomÃ­nio-Tempo:
 class Tempo{
 private:
     static const int max_t = 365, min_t = 0;
     int duracao;
-    bool validar(int);
+    void validar(int);
 public:
-    bool setDuracao(int);
+    void setDuracao(int);
     int getDuracao()const;
 };
 //Metodos-Tempo:
@@ -46,18 +46,18 @@ inline int Tempo::getDuracao()const{
     return duracao;
 }
 
-//Domínio-Texto:
+//DomÃ­nio-Texto:
 class Texto{
 private:
     static const int LIMITE = 40;
-    std::string texto;
-    bool validar(std::string);
+    string texto;
+    void validar(string);
 public:
-    bool setTexto(std::string);
-    std::string getTexto();
+    void setTexto(string);
+    string getTexto()const;
 };
 //Metodos-Texto:
-inline std::string Texto::getTexto(){
+inline string Texto::getTexto()const{
     return texto;
 }
 //Dominio-Data:
