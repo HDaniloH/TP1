@@ -79,6 +79,7 @@ public:
 inline std::string Data::getData(){
     return data;
 }
+
 //Dominio-Estado:
 class Estado{
 private:
@@ -94,8 +95,9 @@ public:
 inline std::string Estado::getEstado(){
     return estado;
 }
+
 //Dominio-Prioridade:
-class prioridade{
+class Prioridade{
  private:
     std::string prio;
      static const int LIMITE = 3;
@@ -108,8 +110,10 @@ class prioridade{
 
 };
 //Metodos-Prioridade:
- inline std::string prioridade::getPrio(){
-    return prio;}
+ inline std::string Prioridade::getPrio(){
+    return prio;
+}
+
 //Dominio-Papel:
 class Papel{
  private:
@@ -125,18 +129,19 @@ class Papel{
 };
 //Metodos-Papel:
  inline std::string Papel::getEscolha_papel(){
-    return escolhapapel;}
+    return escolha_papel;
+}
 //Dominio-Nome:
 class Nome{
 private:
     static const int LIMITE = 10;
-    bool validar(std::string);
     std::string nome;
+    bool validar(std::string);
 public:
+    bool setNome(std::string);
     std::string getNome();
-    bool setNome_(std::string);
 };
 //Metodos-Nome:
  inline std::string Nome::getNome(){
-    return nome;}
-#endif
+    return nome;
+}
