@@ -69,6 +69,11 @@ private:
     bool bissexto;
     bool validar(std::string);
 public:
+    bool operator<(const Data& outro) const{
+        if(ano != outro.ano) return ano < outro.ano;
+        if(mes != outro.mes) return mes < outro.mes;
+        return dia < outro.dia;
+    }
     bool setDia(int);
     bool setMes(int);
     bool setAno(int);
