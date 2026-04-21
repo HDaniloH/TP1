@@ -23,7 +23,7 @@ void Codigo::setCode(string code){
 void Senha::validar(string senha){
 
     if(senha.size()!=LIMITE)
-        throw invalid_argument(to_string(senha.size()) + " eh um tamanho invalido!"
+        throw invalid_argument("Senha invalida: " + to_string(senha.size()) + " eh um tamanho invalido!"
                                + " Eh esperado " + to_string(LIMITE) + " caracteres.");;
 
     int count_AZ=0, count_az=0, count_dig=0;
@@ -213,7 +213,7 @@ bool Papel::setEscolha_papel(int valor){
 //Metodos-Nome:
 bool Nome::validar(string nome){
     if(nome.size() > LIMITE) return false;
-    if((nome[0] == ' ') || (nome[10] == ' ')){
+    if((nome[0] == ' ') || (nome[10]== ' ')){
         cout <<"valor invalido";
         return false;
     }
