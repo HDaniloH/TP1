@@ -5,14 +5,14 @@
 class Codigo{
 private:
     static const int LIMITE = 5;
-    void validar(string);
-    string Code;
+    void validar(std::string);
+    std::string Code;
 public:
-    string getCode()const;
-    void setCode(string);
+    std::string getCode()const;
+    void setCode(std::string);
 };
 //Metodos-Codigo:
-inline string Codigo::getCode()const{
+inline std::string Codigo::getCode()const{
     return Code;
 }
 
@@ -20,14 +20,14 @@ inline string Codigo::getCode()const{
 class Senha{
 private:
     static const int LIMITE = 6;
-    string senha;
-    void validar(string);
+    std::string senha;
+    void validar(std::string);
 public:
-    string getSenha()const;
-    void setSenha(string);
+    std::string getSenha()const;
+    void setSenha(std::string);
 };
 //Metodos-Senha:
-inline string Senha::getSenha()const{
+inline std::string Senha::getSenha()const{
     return senha;
 }
 
@@ -50,16 +50,17 @@ inline int Tempo::getDuracao()const{
 class Texto{
 private:
     static const int LIMITE = 40;
-    string texto;
-    void validar(string);
+    std::string texto;
+    void validar(std::string);
 public:
-    void setTexto(string);
-    string getTexto()const;
+    void setTexto(std::string);
+    std::string getTexto()const;
 };
 //Metodos-Texto:
-inline string Texto::getTexto()const{
+inline std::string Texto::getTexto()const{
     return texto;
 }
+
 //Dominio-Data:
 class Data{
 private:
