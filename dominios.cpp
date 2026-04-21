@@ -100,7 +100,6 @@ bool Data::setAno(int ano){
         this->bissexto = false;
     }
     return true;
-
 }
 bool Data::setMes(int mes){
     if(mes > 12 || mes < 1){
@@ -150,11 +149,11 @@ bool Data::setData(string data) {
     this->data = data;
     return true;
 }
+
 //Metodos-Estado:
 bool Estado::validar(int escolha){
-    if(escolha < 1 || escolha > LIMITE){
-        return false;
-    }
+    if(escolha < 1 || escolha > LIMITE) return false;
+
     return true;
 }
 bool Estado::setEstado(int escolha){
@@ -170,15 +169,14 @@ bool Estado::setEstado(int escolha){
     }
     return true;
 }
-//Metodos-Prioridade:
 
-bool prioridade::validar(int valor){
-    if(valor < 1  valor > LIMITE){
-        return false;
-    }
+//Metodos-Prioridade:
+bool Prioridade::validar(int valor){
+    if(valor < 1 || valor > LIMITE) return false;
+
     return true;
 }
-bool prioridade::setPrio(int valor){
+bool Prioridade::setPrio(int valor){
     if(!validar(valor)){
         cout << "Escolha invalida" << endl;
         return false;
@@ -191,12 +189,11 @@ bool prioridade::setPrio(int valor){
     }
     return true;
 }
-//Metodos-Papel:
 
+//Metodos-Papel:
 bool Papel::validar(int valor){
-    if(valor < 1  valor > LIMITE){
-        return false;
-    }
+    if(valor < 1 || valor > LIMITE) return false;
+
     return true;
 }
 bool Papel::setEscolha_papel(int valor){
@@ -208,21 +205,23 @@ bool Papel::setEscolha_papel(int valor){
     switch(valor){
         case 1: this->escolha_papel = "DESENVOLVEDOR"; break;
         case 2: this->escolha_papel = "MESTRE SCRUM"; break;
-        case 3: this->escolhapapel = "PROPIETARIO DE PRODUTO"; break;
+        case 3: this->escolha_papel = "PROPIETARIO DE PRODUTO"; break;
     }
     return true;
 }
 
-//Metodos-Nome
+//Metodos-Nome:
 bool Nome::validar(string nome){
-    if(nome.size() > LIMITE) {return false;}
-    if((nome[0] == ' ') || (nome[10]== ' ')) cout <<"valor invalido";
-
+    if(nome.size() > LIMITE) return false;
+    if((nome[0] == ' ') || (nome[10] == ' ')){
+        cout <<"valor invalido";
+        return false;
+    }
     return true;
 }
 bool Nome::setNome(string nome){
-    if(!validar(nome)) {return false;
-    }
+    if(!validar(nome)) return false;
     this->nome = nome;
+
     return true;
 }
