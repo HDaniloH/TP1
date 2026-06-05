@@ -235,7 +235,7 @@ public:
 /// @param estado Objeto Estado
 ///
 
-    void setEstado(Estado);
+    void setEstado(const Estado&);
 };
 //Metodos Historia_de_usuario:
 inline Codigo Historia_de_usuario::getCodigo()const{
@@ -405,6 +405,7 @@ private:
     Nome nome;
     Senha senha;
     Papel papel;
+    Email email;
 public:
 
 ///
@@ -432,6 +433,14 @@ public:
     void setPapel(const Papel&);
 
 ///
+/// Armazena uma instância de Email.
+///
+/// @param email Objeto Email
+///
+
+    void setEmail(const Email&);
+
+///
 /// Retorna nome da Pessoa.
 ///
 /// @return Objeto Nome.
@@ -454,6 +463,14 @@ public:
 ///
 
     Papel getPapel() const;
+
+///
+/// Retorna email da Pessoa.
+///
+/// @return Objeto Email.
+///
+
+    Email getEmail() const;
 };
 //Metodos Pessoa:
 inline void Pessoa::setNome(const Nome& nome){
@@ -465,6 +482,9 @@ inline void Pessoa::setSenha(const Senha& senha){
 inline void Pessoa::setPapel(const Papel& papel){
     this->papel = papel;
 }
+inline void Pessoa::setEmail(const Email& email){
+    this->email = email;
+}
 inline Nome Pessoa::getNome() const{
     return nome;
 }
@@ -473,4 +493,7 @@ inline Senha Pessoa::getSenha() const{
 }
 inline Papel Pessoa::getPapel() const{
     return papel;
+}
+inline Email Pessoa::getEmail() const{
+    return email;
 }
