@@ -35,7 +35,7 @@ public:
 ///
 /// Caso o c&oacute;digo informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor C&oacute;digo.
+/// @param code C&oacute;digo.
 ///
 /// @throw invalid_argument
 ///
@@ -84,7 +84,7 @@ public:
 ///
 /// Caso a senha informada seja inv&aacute;lida, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Senha.
+/// @param senha Senha.
 ///
 /// @throw invalid_argument
 ///
@@ -120,7 +120,7 @@ public:
 ///
 /// Caso o tempo informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Tempo.
+/// @param tempo Tempo.
 ///
 /// @throw invalid_argument
 ///
@@ -168,7 +168,7 @@ public:
 ///
 /// Caso o texto informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Texto.
+/// @param texto Texto.
 ///
 /// @throw invalid_argument
 ///
@@ -220,7 +220,7 @@ public:
 ///
 /// Caso o dia informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Dia.
+/// @param dia Dia.
 ///
 /// @throw invalid_argument
 ///
@@ -232,7 +232,7 @@ public:
 ///
 /// Caso o mês informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Mês.
+/// @param mes Mês.
 ///
 /// @throw invalid_argument
 ///
@@ -244,7 +244,7 @@ public:
 ///
 /// Caso o ano informado seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Ano.
+/// @param ano Ano.
 ///
 /// @throw invalid_argument
 ///
@@ -256,7 +256,7 @@ public:
 ///
 /// Caso a data informada seja inv&aacute;lida, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Data.
+/// @param data Data.
 ///
 /// @throw invalid_argument
 ///
@@ -300,7 +300,7 @@ public:
 ///
 /// Caso a escolha seja inv&aacute;lida, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Escolha.
+/// @param escolha Escolha.
 ///
 /// @throw invalid_argument
 ///
@@ -436,7 +436,7 @@ public:
 ///
 /// Caso o nome seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Nome.
+/// @param nome Nome.
 ///
 /// @throw invalid_argument
 ///
@@ -498,7 +498,7 @@ public:
 ///
 /// Caso o email seja inv&aacute;lido, lan&ccedil;a exce&ccedil;&atilde;o.
 ///
-/// @param valor Email.
+/// @param email Email.
 ///
 /// @throw invalid_argument
 ///
