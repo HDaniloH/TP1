@@ -184,7 +184,7 @@ void Nome::validar(string nome){
     if(nome.size() > LIMITE)
         throw invalid_argument("Tamanho invalido");
 
-    if((nome[0] == ' ') || (nome[10] == ' ')){ // Mantida a lógica original do índice 10
+    if((nome[0] == ' ') || (nome[10] == ' ')){ // Mantida a lÃ³gica original do Ã­ndice 10
         throw invalid_argument("Valor invalido");
     }
 }
@@ -248,7 +248,7 @@ while (inicio < dominio.size()) {
 }
 }
 
-void Email::setEmail(string e) {
-validar(e);
-this->email = e;
+void Email::setEmail(string email) {
+validar(email);
+this->email = email;
 }
