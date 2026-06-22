@@ -46,6 +46,14 @@ public:
     bool lerProjeto(Projeto&) override;
     bool atualizarProjeto(const Projeto&) override;
     bool excluirProjeto(const Codigo&) override;
+    bool criarSprint(const Plano_de_Sprint&) override;
+    bool lerSprint(Plano_de_Sprint&) override;
+    bool atualizarSprint(const Plano_de_Sprint&) override;
+    bool excluirSprint(const Codigo&) override;
+    bool criarHistoria(const Historia_de_usuario&) override;
+    bool lerHistoria(Historia_de_usuario&) override;
+    bool atualizarHistoria(const Historia_de_usuario&) override;
+    bool excluirHistoria(const Codigo&) override;
 };
 
 
@@ -83,6 +91,29 @@ inline CntrBancoDados::CntrBancoDados(){
         "termino TEXT NOT NULL);";
     if(sqlite3_exec(db, sqlProjeto, nullptr, nullptr, &erro) != SQLITE_OK){
         std::cout << "Erro ao criar tabela projeto: " << erro << "\n";
+        sqlite3_free(erro);
+    }
+    const char* sqlSprint =
+        "CREATE TABLE IF NOT EXISTS plano_sprint ("
+        "codigo TEXT PRIMARY KEY, "
+        "objetivo TEXT NOT NULL, "
+        "capacidade INTEGER NOT NULL);";
+    if(sqlite3_exec(db, sqlSprint, nullptr, nullptr, &erro) != SQLITE_OK){
+        std::cout << "Erro ao criar tabela plano_sprint: " << erro << "\n";
+        sqlite3_free(erro);
+    }
+    const char* sqlHistoria =
+        "CREATE TABLE IF NOT EXISTS historia ("
+        "codigo TEXT PRIMARY KEY, "
+        "titulo TEXT NOT NULL, "
+        "papel TEXT NOT NULL, "
+        "acao TEXT NOT NULL, "
+        "valor TEXT NOT NULL, "
+        "estimativa INTEGER NOT NULL, "
+        "prioridade TEXT NOT NULL, "
+        "estado TEXT NOT NULL);";
+    if(sqlite3_exec(db, sqlHistoria, nullptr, nullptr, &erro) != SQLITE_OK){
+        std::cout << "Erro ao criar tabela historia: " << erro << "\n";
         sqlite3_free(erro);
     }
 }
@@ -229,6 +260,178 @@ inline bool CntrBancoDados::excluir(const Email& email){
     sqlite3_stmt* stmt;
     if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
     sqlite3_bind_text(stmt, 1, e.c_str(), -1, SQLITE_TRANSIENT);
+    int rc = sqlite3_step(stmt);
+    int mudou = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE && mudou > 0);
+}
+inline bool CntrBancoDados::criarSprint(const Plano_de_Sprint& sprint){
+    std::string codigo    = sprint.getCodigo().getCode();
+    std::string objetivo  = sprint.getObjetivo().getTexto();
+    int capacidade        = sprint.getCapacidade().getDuracao();
+    const char* sql = "INSERT INTO plano_sprint (codigo, objetivo, capacidade) VALUES (?, ?, ?);";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, codigo.c_str(),   -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, objetivo.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int (stmt, 3, capacidade);
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE);
+}
+
+inline bool CntrBancoDados::lerSprint(Plano_de_Sprint& sprint){
+    std::string codigo = sprint.getCodigo().getCode();
+    const char* sql = "SELECT objetivo, capacidade FROM plano_sprint WHERE codigo = ?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, codigo.c_str(), -1, SQLITE_TRANSIENT);
+    bool encontrou = false;
+    if(sqlite3_step(stmt) == SQLITE_ROW){
+        std::string objetivoBanco = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        int capacidadeBanco = sqlite3_column_int(stmt, 1);
+        Texto objetivo;  objetivo.setTexto(objetivoBanco);
+        Tempo capacidade; capacidade.setDuracao(capacidadeBanco);
+        sprint.setObjetivo(objetivo);
+        sprint.setCapacidade(capacidade);
+        encontrou = true;
+    }
+    sqlite3_finalize(stmt);
+    return encontrou;
+}
+
+inline bool CntrBancoDados::atualizarSprint(const Plano_de_Sprint& sprint){
+    std::string codigo    = sprint.getCodigo().getCode();
+    std::string objetivo  = sprint.getObjetivo().getTexto();
+    int capacidade        = sprint.getCapacidade().getDuracao();
+    const char* sql = "UPDATE plano_sprint SET objetivo = ?, capacidade = ? WHERE codigo = ?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, objetivo.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int (stmt, 2, capacidade);
+    sqlite3_bind_text(stmt, 3, codigo.c_str(),   -1, SQLITE_TRANSIENT);
+    int rc = sqlite3_step(stmt);
+    int mudou = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE && mudou > 0);
+}
+
+inline bool CntrBancoDados::excluirSprint(const Codigo& codigo){
+    std::string c = codigo.getCode();
+    const char* sql = "DELETE FROM plano_sprint WHERE codigo = ?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, c.c_str(), -1, SQLITE_TRANSIENT);
+    int rc = sqlite3_step(stmt);
+    int mudou = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE && mudou > 0);
+}
+// helpers para converter texto de volta para a escolha numerica
+inline int mapaPrioridade(const std::string& p){
+    if(p == "ALTA") return 1;
+    if(p == "MEDIA") return 2;
+    return 3; // BAIXA
+}
+inline int mapaEstado(const std::string& e){
+    if(e == "A FAZER") return 1;
+    if(e == "FAZENDO") return 2;
+    return 3; // FEITO
+}
+
+inline bool CntrBancoDados::criarHistoria(const Historia_de_usuario& h){
+    std::string codigo     = h.getCodigo().getCode();
+    std::string titulo     = h.getTitulo().getTexto();
+    std::string papel      = h.getPapel().getTexto();
+    std::string acao       = h.getAcao().getTexto();
+    std::string valor      = h.getValor().getTexto();
+    int estimativa         = h.getEstimativa().getDuracao();
+    std::string prioridade = h.getPrioridade().getPrio();
+    std::string estado     = h.getEstado().getEstado();
+    const char* sql = "INSERT INTO historia (codigo, titulo, papel, acao, valor, estimativa, prioridade, estado) "
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, codigo.c_str(),     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, titulo.c_str(),     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, papel.c_str(),      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, acao.c_str(),       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, valor.c_str(),      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int (stmt, 6, estimativa);
+    sqlite3_bind_text(stmt, 7, prioridade.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 8, estado.c_str(),     -1, SQLITE_TRANSIENT);
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE);
+}
+
+inline bool CntrBancoDados::lerHistoria(Historia_de_usuario& h){
+    std::string codigo = h.getCodigo().getCode();
+    const char* sql = "SELECT titulo, papel, acao, valor, estimativa, prioridade, estado FROM historia WHERE codigo = ?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, codigo.c_str(), -1, SQLITE_TRANSIENT);
+    bool encontrou = false;
+    if(sqlite3_step(stmt) == SQLITE_ROW){
+        std::string tituloB     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string papelB      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        std::string acaoB       = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        std::string valorB      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        int estimativaB         = sqlite3_column_int(stmt, 4);
+        std::string prioridadeB = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5));
+        std::string estadoB     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6));
+        Texto titulo;  titulo.setTexto(tituloB);
+        Texto papel;   papel.setTexto(papelB);
+        Texto acao;    acao.setTexto(acaoB);
+        Texto valor;   valor.setTexto(valorB);
+        Tempo estimativa; estimativa.setDuracao(estimativaB);
+        Prioridade prioridade; prioridade.setPrio(mapaPrioridade(prioridadeB));
+        Estado estado; estado.setEstado(mapaEstado(estadoB));
+        h.setTitulo(titulo);
+        h.setPapel(papel);
+        h.setAcao(acao);
+        h.setValor(valor);
+        h.setEstimativa(estimativa);
+        h.setPrioridade(prioridade);
+        h.setEstado(estado);
+        encontrou = true;
+    }
+    sqlite3_finalize(stmt);
+    return encontrou;
+}
+
+inline bool CntrBancoDados::atualizarHistoria(const Historia_de_usuario& h){
+    std::string codigo     = h.getCodigo().getCode();
+    std::string titulo     = h.getTitulo().getTexto();
+    std::string papel      = h.getPapel().getTexto();
+    std::string acao       = h.getAcao().getTexto();
+    std::string valor      = h.getValor().getTexto();
+    int estimativa         = h.getEstimativa().getDuracao();
+    std::string prioridade = h.getPrioridade().getPrio();
+    std::string estado     = h.getEstado().getEstado();
+    const char* sql = "UPDATE historia SET titulo=?, papel=?, acao=?, valor=?, estimativa=?, prioridade=?, estado=? WHERE codigo=?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, titulo.c_str(),     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, papel.c_str(),      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, acao.c_str(),       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, valor.c_str(),      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int (stmt, 5, estimativa);
+    sqlite3_bind_text(stmt, 6, prioridade.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 7, estado.c_str(),     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 8, codigo.c_str(),     -1, SQLITE_TRANSIENT);
+    int rc = sqlite3_step(stmt);
+    int mudou = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_DONE && mudou > 0);
+}
+
+inline bool CntrBancoDados::excluirHistoria(const Codigo& codigo){
+    std::string c = codigo.getCode();
+    const char* sql = "DELETE FROM historia WHERE codigo = ?;";
+    sqlite3_stmt* stmt;
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_text(stmt, 1, c.c_str(), -1, SQLITE_TRANSIENT);
     int rc = sqlite3_step(stmt);
     int mudou = sqlite3_changes(db);
     sqlite3_finalize(stmt);

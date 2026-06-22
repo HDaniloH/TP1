@@ -323,7 +323,14 @@ public:
 ///
 /// Método destrutor virtual da interface.
 ///
-
+    virtual bool criarSprint(const Plano_de_Sprint&) = 0;
+    virtual bool lerSprint(Plano_de_Sprint&) = 0;
+    virtual bool atualizarSprint(const Plano_de_Sprint&) = 0;
+    virtual bool excluirSprint(const Codigo&) = 0;
+    virtual bool criarHistoria(const Historia_de_usuario&) = 0;
+    virtual bool lerHistoria(Historia_de_usuario&) = 0;
+    virtual bool atualizarHistoria(const Historia_de_usuario&) = 0;
+    virtual bool excluirHistoria(const Codigo&) = 0;
     virtual ~IBancoDados(){}
 };
 ///
@@ -345,5 +352,45 @@ public:
     virtual bool atualizar(const Projeto&) = 0;
     virtual bool excluir(const Codigo&) = 0;
     virtual ~ISProjeto(){}
+};
+///
+/// Interface de plano de sprint da camada de apresentacao.
+///
+class IAPlanoSprint{
+public:
+    virtual void executar(const Email&) = 0;
+    virtual ~IAPlanoSprint(){}
+};
+
+///
+/// Interface de plano de sprint da camada de servico.
+///
+class ISPlanoSprint{
+public:
+    virtual bool criar(const Plano_de_Sprint&) = 0;
+    virtual bool ler(Plano_de_Sprint&) = 0;
+    virtual bool atualizar(const Plano_de_Sprint&) = 0;
+    virtual bool excluir(const Codigo&) = 0;
+    virtual ~ISPlanoSprint(){}
+};
+///
+/// Interface de historia de usuario da camada de apresentacao.
+///
+class IAHistoria{
+public:
+    virtual void executar(const Email&) = 0;
+    virtual ~IAHistoria(){}
+};
+
+///
+/// Interface de historia de usuario da camada de servico.
+///
+class ISHistoria{
+public:
+    virtual bool criar(const Historia_de_usuario&) = 0;
+    virtual bool ler(Historia_de_usuario&) = 0;
+    virtual bool atualizar(const Historia_de_usuario&) = 0;
+    virtual bool excluir(const Codigo&) = 0;
+    virtual ~ISHistoria(){}
 };
 #endif // INTERFACES_HPP_INCLUDED
