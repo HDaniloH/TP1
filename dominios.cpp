@@ -5,93 +5,92 @@
 using namespace std;
 
 //Metodos-Codigo:
-bool Codigo::validar(string code){
-    if(code.size()!=LIMITE) return false;
-    if(!isupper(code[0]) || !isupper(code[1])) return false;
-    if(!isdigit(code[2]) || !isdigit(code[3]) || !isdigit(code[4])) return false;
-    return true;
+void Codigo::validar(string code){
+    if(code.size()!=LIMITE)
+        throw invalid_argument(to_string(code.size()) + " eh um tamanho invalido!"
+                               + " Eh esperado " + to_string(LIMITE) + " caracteres.");
+    if(!isupper(code[0]) || !isupper(code[1]))
+        throw invalid_argument("Argumento invalido. Os dois primeiros caracteres devem ter o formato 'XX' (letras maiusculas).");
+    if(!isdigit(code[2]) || !isdigit(code[3]) || !isdigit(code[4]))
+        throw invalid_argument("Argumento invalido. Eh esperado 3 digitos numericos finais.");
 }
-bool Codigo::setCode(string code){
-    if(!validar(code)) return false;
+void Codigo::setCode(string code){
+    validar(code);
     this->Code = code;
-    return true;
 }
 
 //Metodos-Senha:
-bool Senha::validar(string senha){
+void Senha::validar(string senha){
 
-    if(senha.size()!=LIMITE) return false;
+    if(senha.size()!=LIMITE)
+        throw invalid_argument("Senha invalida: " + to_string(senha.size()) + " eh um tamanho invalido!"
+                               + " Eh esperado " + to_string(LIMITE) + " caracteres.");;
 
     int count_AZ=0, count_az=0, count_dig=0;
 
     for(int i=0; i<LIMITE; i++){
 
-        if(!isalnum(senha[i])) return false;
+        if(!isalnum(senha[i])) throw invalid_argument("Caracter pode apenas ser letra (A-Z ou a-z) ou digito (0-9).");
 
         if(i<senha.size()-1){
             if((isalpha(senha[i])&&isalpha(senha[i+1]))||
                (isdigit(senha[i])&&isdigit(senha[i+1]))){
-                return false;
+                throw invalid_argument("Letra nao pode ser seguida por letra, digito nao pode ser seguido por digito.");
             }
         }
         if(isupper(senha[i])) count_AZ++;
         else if(islower(senha[i])) count_az++;
         else if(isdigit(senha[i])) count_dig++;
     }
-    if(count_AZ == 0 || count_az == 0 || count_dig == 0) return false;
-
-    return true;
+    if(count_AZ == 0 || count_az == 0 || count_dig == 0)
+        throw invalid_argument("Devem existir pelo menos uma letra minuscula (a-z), uma letra maiuscula (A-Z) e um digito (0-9).");
 }
-bool Senha::setSenha(string senha){
-    if(!validar(senha)) return false;
+void Senha::setSenha(string senha){
+    validar(senha);
     this->senha = senha;
-    return true;
 }
 
 //Metodos-Tempo:
-bool Tempo::validar(int n){
-    if(n > min_t && n <= max_t) return true;
-    return false;
+void Tempo::validar(int n){
+    if(!(n > min_t && n <= max_t)) throw invalid_argument("Argumento invalido. Insira um digito entre 1 e 365.");
 }
-bool Tempo::setDuracao(int tempo){
-    if(!validar(tempo)) return false;
+void Tempo::setDuracao(int tempo){
+    validar(tempo);
     this->duracao = tempo;
-    return true;
 }
 
 //Metodos-Texto:
-bool Texto::validar(string texto){
+void Texto::validar(string texto){
 
     int tam = texto.size();
 
-    if(tam>LIMITE) return false;
+    if(tam>LIMITE) throw invalid_argument("Argumento invalido. O tamanho do texto pode ser de no maximo " + to_string(LIMITE) + " caracteres.");
 
-    if(!isalnum(texto[0]) || !isalnum(texto[tam-1])) return false;
+    if(!isalnum(texto[0]) || !isalnum(texto[tam-1]))
+        throw invalid_argument("O primeiro e o ultimo caracteres so podem ser letras (a-z ou A-Z) ou digitos (0-9).");
 
     for(int i = 0; i < tam; i++){
 
         if(!isalnum(texto[i]) && texto[i] != ',' && texto[i] != '.' && texto[i] != ' ')
-            return false;
+            throw invalid_argument("Argumento invalido. Caracter deve ser letra (a-z ou A-Z), digito (0-9), virgula, ponto ou espaco em branco.");
 
         if(i<(tam-1)){
-            if(((texto[i] == ',' || texto[i] == '.') && (texto[i+1] == ',' || texto[i+1] == '.'))||
-               (texto[i] == ' ' && !isalnum(texto[i+1])))
-                return false;
+            if((texto[i] == ',' || texto[i] == '.') && (texto[i+1] == ',' || texto[i+1] == '.'))
+                throw invalid_argument("Argumento Invalido. Ponto ou virgula nao pode ser seguido por virgula ou ponto.");
+            else if(texto[i] == ' ' && !isalnum(texto[i+1]))
+                throw invalid_argument("Argumento Invalido. Espaco em branco deve ser seguido por letra ou digito.");
         }
     }
-    return true;
 }
-bool Texto::setTexto(string texto){
-    if(!validar(texto)) return false;
+void Texto::setTexto(string texto){
+    validar(texto);
     this->texto = texto;
-    return true;
 }
 
 //Metodos-Data
-bool Data::setAno(int ano){
+void Data::setAno(int ano){
     if(ano > 2999 || ano < 2000){
-        cout << "Ano invalido";
-        return false;
+        throw invalid_argument("Ano invalido");
     }
     this->ano = ano;
     if ((ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0)){
@@ -99,74 +98,161 @@ bool Data::setAno(int ano){
     } else {
         this->bissexto = false;
     }
-    return true;
-
 }
-bool Data::setMes(int mes){
+void Data::setMes(int mes){
     if(mes > 12 || mes < 1){
-        cout << "Mes invalido";
-        return false;
+        throw invalid_argument("Mes invalido");
     }
     this->mes = mes;
-    return true;
-
 }
-bool Data::setDia(int dia){
+void Data::setDia(int dia){
     if(dia > 31 || dia < 1){
-        cout << "Dia invalido";
-        return false;
+        throw invalid_argument("Dia invalido");
     }
     if((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia > 30)){
-        cout << "Dia invalido";
-        return false;
+        throw invalid_argument("Dia invalido");
     }
     if(mes == 2 && !bissexto && dia > 28){
-        cout << "Dia invalido";
-        return false;
+        throw invalid_argument("Dia invalido");
     }
     if(mes == 2 && bissexto && dia > 29){
-        cout << "Dia invalido";
-        return false;
+        throw invalid_argument("Dia invalido");
     }
     this->dia = dia;
-    return true;
 }
-bool Data::setData(string data) {
+void Data::setData(string data) {
     int dia, mes, ano;
-
     if (sscanf(data.c_str(), "%d/%d/%d", &dia, &mes, &ano) != 3) {
-        cout << "Formato invalido!" << endl;
-        return false;
+        throw invalid_argument("Formato invalido!");
     }
-    if (!this->setAno(ano)) {
-        return false;
-    }
-    if (!this->setMes(mes)){
-        return false;
-    }
-    if (!this->setDia(dia)){
-        return false;
-    }
+    this->setAno(ano);
+    this->setMes(mes);
+    this->setDia(dia);
+
     this->data = data;
-    return true;
 }
+
 //Metodos-Estado:
-bool Estado::validar(int escolha){
-    if(escolha < 1 || escolha > LIMITE){
-        return false;
-    }
-    return true;
+void Estado::validar(int escolha){
+    if(escolha < 1 || escolha > LIMITE)
+        throw invalid_argument("Escolha invalida");
 }
-bool Estado::setEstado(int escolha){
-    if(!validar(escolha)){
-        cout << "Escolha invalida" << endl;
-        return false;
-    }
+void Estado::setEstado(int escolha){
+    validar(escolha);
     this->escolha = escolha;
     switch(escolha){
         case 1: this->estado = "A FAZER"; break;
         case 2: this->estado = "FAZENDO"; break;
         case 3: this->estado = "FEITO"; break;
     }
-    return true;
+}
+
+//Metodos-Prioridade:
+void Prioridade::validar(int valor){
+    if(valor < 1 || valor > LIMITE)
+        throw invalid_argument("Escolha invalida");
+}
+
+void Prioridade::setPrio(int valor){
+    validar(valor);
+    this->valor = valor;
+    switch(valor){
+        case 1: this->prio = "ALTA"; break;
+        case 2: this->prio = "MEDIA"; break;
+        case 3: this->prio = "BAIXA"; break;
+    }
+}
+
+//Metodos-Papel:
+void Papel::validar(int valor){
+    if(valor < 1 || valor > LIMITE)
+        throw invalid_argument("Escolha invalida");
+}
+
+void Papel::setEscolha_papel(int valor){
+    validar(valor);
+    this->valor = valor;
+    switch(valor){
+        case 1: this->escolha_papel = "DESENVOLVEDOR"; break;
+        case 2: this->escolha_papel = "MESTRE SCRUM"; break;
+        case 3: this->escolha_papel = "PROPIETARIO DE PRODUTO"; break;
+    }
+}
+
+//Metodos-Nome:
+void Nome::validar(string nome){
+    int tam = nome.size();
+    if(tam > LIMITE)
+        throw invalid_argument("Tamanho invalido");
+    if(tam == 0 || nome[0] == ' ' || nome[tam-1] == ' ')
+        throw invalid_argument("Nome nao pode iniciar ou terminar com espaco.");
+    for(int i = 0; i < tam; i++){
+        if(!isalpha(nome[i]) && nome[i] != ' ')
+            throw invalid_argument("Nome so pode conter letras e espacos.");
+        if(nome[i] == ' ' && (i+1 >= tam || !isalpha(nome[i+1])))
+            throw invalid_argument("Espaco deve ser seguido por letra.");
+    }
+}
+
+void Nome::setNome(string nome){
+    validar(nome);    this->nome = nome;
+}
+//Metodos-Email:
+void Email::validar(string e){
+size_t arroba = e.find('@');
+if (arroba == string::npos || e.find('@', arroba + 1) != string::npos)
+    throw invalid_argument("Email invalido: deve conter um unico '@'.");
+
+string local = e.substr(0, arroba);
+string dominio = e.substr(arroba + 1);
+
+// ---- PARTE LOCAL ----
+if (local.empty() || local.size() > LIMITE_LOCAL)
+    throw invalid_argument("Parte local invalida.");
+
+if (local.front() == '.' || local.front() == '-' || local.back() == '.' || local.back() == '-')
+    throw invalid_argument("Parte local nao pode iniciar ou terminar com '.' ou '-'.");
+
+for (size_t i = 0; i < local.size(); i++) {
+    char c = local[i];
+
+if (!(islower(c) || isdigit(c) || c == '.' || c == '-'))
+    throw invalid_argument("Caractere invalido na parte local.");
+
+if (i > 0) {
+    if ((c == '.' || c == '-') && (local[i-1] == '.' || local[i-1] == '-'))
+            throw invalid_argument("Nao pode haver '.' ou '-' consecutivos.");
+    }
+}
+
+// ---- PARTE DOMINIO ----
+if (dominio.empty() || dominio.size() > LIMITE_DOMINIO)
+    throw invalid_argument("Dominio invalido.");
+
+size_t inicio = 0;
+
+while (inicio < dominio.size()) {
+    size_t fim = dominio.find('.', inicio);
+    if (fim == string::npos) fim = dominio.size();
+
+    string parte = dominio.substr(inicio, fim - inicio);
+
+    if (parte.empty())
+        throw invalid_argument("Parte do dominio vazia.");
+
+    if (parte.front() == '-' || parte.back() == '-')
+        throw invalid_argument("Parte do dominio nao pode iniciar ou terminar com '-'.");
+
+    for (char c : parte) {
+        if (!(islower(c) || isdigit(c) || c == '-'))
+            throw invalid_argument("Caractere invalido no dominio.");
+    }
+
+    inicio = fim + 1;
+}
+}
+
+void Email::setEmail(string email) {
+validar(email);
+this->email = email;
 }
