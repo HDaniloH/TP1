@@ -45,3 +45,6 @@ bin/
 obj/
 *.layout
 *.depend
+dados.db
+obj/
+bin/
