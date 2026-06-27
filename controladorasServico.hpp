@@ -1,7 +1,7 @@
 #ifndef CONTROLADORASSERVICO_HPP_INCLUDED
 #define CONTROLADORASSERVICO_HPP_INCLUDED
 
-#include "Interfaces.hpp"
+#include "interfaces.hpp"
 
 // ===================== AUTENTICACAO =====================
 /// Controladora de servico para autenticacao. Delega ao banco de dados.
