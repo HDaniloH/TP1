@@ -53,7 +53,7 @@ bool CntrApresentacaoAutenticacao::autenticar(Email* email){
     return cntrServicoAutenticacao->autenticar(*email, senha);
 }
 
-// ===================== SERVIÇO DE GESTAO =====================
+// ===================== SERVIÃ‡O DE GESTAO =====================
 // ASSOCIACOES
 
 // CONTA.
@@ -650,68 +650,6 @@ void CntrAGestao::menuHistorias(const Email& e){
         }
     } while(opcao != 0);
 }
-
-/*void CntrAGestao::menuAssociacoes(){
-    int opcao;
-    do {
-        std::cout << "\n===== Associacoes =====\n";
-        std::cout << "1 - Estabelecer associacao entre HISTORIA DE USUARIO e PESSOA\n;
-        std::cout << "2 - remover associacao entre HISTORIA DE USUARIO e PESSOA\n"
-        std::cout << "2 - listar HISTORIAS DE USUARIO associadas a PROJETO\n"
-        std::cout << "2 - listar HISTORIAS DE USUARIO associadas a PLANO DE SPRINT\n\n"
-        std::cout << "Escolha: ";
-        std::cin  >> opcao;
-        switch(opcao){
-            case 1: {
-                Projeto p;
-                Historia_de_usuario h;
-                Codigo c;
-                bool resultadoHist = lerDadosHistoria(h);
-                std::cout << "Historia de usuario, ao ser criada, deve ser associada a um projeto, pelo seu codigo.\n";
-                bool resultadoCodigo = lerCodigoProjeto(c);
-                p.setCodigo(c);
-                bool existencia = cntrServicoGestao->lerProjeto(p);
-                if(!existencia){
-                    std::cout << "A historia de usuario deve ser associada a um projeto existente.\n";
-                    break;
-                }
-                if(resultadoHist && resultadoCodigo){
-                    if(cntrServicoGestao->criarHistoria(h, c)) std::cout << "Historia criada com sucesso!\n";
-                    else std::cout << "Nao foi possivel criar (codigo ja existe).\n";
-                }
-                break;
-            }
-            case 2: {
-                Codigo c;
-                if(lerCodigoHistoria(c)){
-                    Historia_de_usuario h; h.setCodigo(c);
-                    if(cntrServicoGestao->lerHistoria(h)) exibirHistoria(h);
-                    else std::cout << "Historia nao encontrada.\n";
-                }
-                break;
-            }
-            case 3: {
-                std::cout << "Informe os dados atualizados (mesmo codigo):\n";
-                Historia_de_usuario h;
-                if(lerDadosHistoria(h)){
-                    if(cntrServicoGestao->atualizarHistoria(h)) std::cout << "Historia atualizada com sucesso!\n";
-                    else std::cout << "Nao foi possivel atualizar (nao existe).\n";
-                }
-                break;
-            }
-            case 4: {
-                Codigo c;
-                if(lerCodigoHistoria(c)){
-                    if(cntrServicoGestao->excluirHistoria(c)) std::cout << "Historia excluida com sucesso!\n";
-                    else std::cout << "Nao foi possivel excluir (nao existe).\n";
-                }
-                break;
-            }
-            case 0: std::cout << "Voltando...\n"; break;
-            default: std::cout << "Opcao invalida.\n";
-        }
-    } while(opcao != 0);
-}*/
 
 void CntrAGestao::executar(const Email& email){
     int opcao;
